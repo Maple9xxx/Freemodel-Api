@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Freemodel Chat & Responses Client</title>
+    <style>
+        :root {
+            --bg-main: #121214;
+            --bg-sidebar: #1a1a1e;
+            --bg-chat: #16161a;
+            --bg-input: #222227;
+            --border-color: #2e2e35;
+            --text-main: #e4e4e7;
+            --text-muted: #a1a1aa;
+            --accent-purple: #8b5cf6;
+            --accent-green: #10b981;
+            --accent-blue: #3b82f6;
+            --user-bubble: #2a2b36;
+            --assistant-bubble: #1e1f29;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .app-container {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        /* Sidebar Panel */
+        .sidebar {
+            width: 280px;
+            background-color: var(--bg-sidebar);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            justify-content: space-between;
+            flex-shrink: 0;
+            transition: left 0.3s ease;
+        }
+
+        .sidebar-header-mobile {
+            display: none;
+            justify-content: flex-end;
+            margin-bottom: -10px;
+        }
+
+        .brand {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: var(--accent-green);
+        }
+
+        .mode-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            flex-grow: 1;
+        }
+
+        .section-title {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            margin-bottom: 5px;
+        }
+
+        .btn-mode {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 15px;
+            background-color: transparent;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-main);
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s;
+            font-size: 0.95rem;
+        }
+
+        .btn-mode:hover { background-color: var(--bg-input); }
+        .btn-mode.active {
+            border-color: var(--accent-blue);
+            background-color: rgba(59, 130, 246, 0.1);
+        }
+
+        .badge {
+            font-size: 0.75rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            background-color: var(--border-color);
+            color: var(--text-muted);
+        }
+
+        .btn-mode.active .badge-chat { background-color: rgba(16, 185, 129, 0.2); color: var(--accent-green); }
+        .btn-mode.active .badge-resp { background-color: rgba(139, 92, 246, 0.2); color: var(--accent-purple); }
+
+        .footer-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .btn-action {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px;
+            background-color: var(--bg-input);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-main);
+            cursor: pointer;
+            transition: background 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .btn-action:hover { background-color: var(--border-color); }
+
+        /* Main Chat Area */
+        .chat-main {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: var(--bg-chat);
+            height: 100%;
+        }
+
+        .chat-header {
+            height: 60px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            background-color: rgba(22, 22, 26, 0.8);
+            backdrop-filter: blur(8px);
+            z-index: 10;
+        }
+
+        .current-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .menu-btn {
+            display: none;
+            background: transparent;
+            border: none;
+            color: var(--text-main);
+            cursor: pointer;
+            padding: 4px;
+            margin-right: 4px;
+        }
+
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--accent-green);
+        }
+
+        .chat-messages {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .message {
+            display: flex;
+            flex-direction: column;
+            max-width: 85%;
+            padding: 14px 18px;
+            border-radius: 12px;
+            line-height: 1.5;
+            font-size: 0.98rem;
+            word-break: break-word;
+        }
+
+        .message.user {
+            align-self: flex-end;
+            background-color: var(--user-bubble);
+            border-bottom-right-radius: 2px;
+        }
+
+        .message.assistant {
+            align-self: flex-start;
+            background-color: var(--assistant-bubble);
+            border-bottom-left-radius: 2px;
+            border: 1px solid var(--border-color);
+        }
+
+        .message .meta {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .message pre {
+            background-color: #0d0d10;
+            padding: 12px;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 8px 0;
+            border: 1px solid var(--border-color);
+        }
+
+        .message code { font-family: monospace; font-size: 0.9rem; }
+
+        .attachment-bar { display: flex; flex-wrap: wrap; gap: 10px; padding-bottom: 10px; }
+        .attachment-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background-color: var(--bg-input);
+            border: 1px solid var(--border-color);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+        }
+        .attachment-item .remove-btn { cursor: pointer; color: #ef4444; font-weight: bold; }
+
+        .chat-input-panel {
+            padding: 20px 24px;
+            border-top: 1px solid var(--border-color);
+            background-color: var(--bg-chat);
+        }
+
+        .input-container {
+            display: flex;
+            gap: 12px;
+            background-color: var(--bg-input);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 8px 12px;
+            align-items: flex-end;
+        }
+
+        .input-container:focus-within { border-color: var(--accent-blue); }
+
+        textarea {
+            flex-grow: 1;
+            background: transparent;
+            border: none;
+            color: var(--text-main);
+            resize: none;
+            height: 24px;
+            max-height: 160px;
+            font-size: 0.95rem;
+            outline: none;
+            line-height: 24px;
+        }
+
+        .input-actions { display: flex; align-items: center; gap: 8px; }
+        .icon-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 6px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .icon-btn:hover { color: var(--text-main); background-color: var(--border-color); }
+
+        .btn-send {
+            background-color: var(--accent-blue);
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        /* Sidebar Mobile Overlay */
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0,0,0,0.5);
+            z-index: 98;
+            display: none;
+        }
+
+        /* Modal Settings */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: flex; align-items: center; justify-content: center;
+            z-index: 999; opacity: 0; pointer-events: none;
+            transition: opacity 0.2s;
+        }
+        .modal-overlay.open { opacity: 1; pointer-events: auto; }
+
+        .modal {
+            background-color: var(--bg-sidebar);
+            border: 1px solid var(--border-color);
+            width: 90%; max-width: 480px;
+            border-radius: 12px; padding: 24px;
+            display: flex; flex-direction: column; gap: 18px;
+        }
+
+        .modal-header { display: flex; justify-content: space-between; align-items: center; font-weight: bold; }
+        .form-group { display: flex; flex-direction: column; gap: 6px; }
+        .form-group label { font-size: 0.85rem; color: var(--text-muted); }
+        .form-group input {
+            background-color: var(--bg-input); border: 1px solid var(--border-color);
+            padding: 10px 12px; border-radius: 6px; color: var(--text-main); outline: none;
+        }
+        .modal-footer { display: flex; justify-content: flex-end; gap: 10px; }
+
+        /* Responsive Mobile Layout */
+        @media (max-width: 768px) {
+            .menu-btn { display: block; }
+            .sidebar-header-mobile { display: flex; }
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: -280px;
+                height: 100%;
+                z-index: 999;
+                box-shadow: 5px 0 15px rgba(0,0,0,0.5);
+            }
+            .sidebar.open { left: 0; }
+            .sidebar-overlay.open { display: block; }
+            .chat-messages { padding: 16px; }
+            .chat-input-panel { padding: 12px 16px; }
+            .message { max-width: 90%; }
+        }
+
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar(false)"></div>
+
+    <div class="app-container">
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header-mobile">
+                <button class="icon-btn" onclick="toggleSidebar(false)" style="font-size: 1.5rem;">&times;</button>
+            </div>
+            <div class="mode-section">
+                <div class="brand"><div class="brand-dot"></div>Freemodel Client</div>
+                <div class="section-title">Chế độ hoạt nhiên</div>
+                <button class="btn-mode active" id="mode-chat-btn" onclick="switchMode('chat')">
+                    <span>/v1/chat/completions</span><span class="badge badge-chat">Chat</span>
+                </button>
+                <button class="btn-mode" id="mode-resp-btn" onclick="switchMode('responses')">
+                    <span>/v1/responses</span><span class="badge badge-resp">Responses</span>
+                </button>
+            </div>
+            <div class="footer-actions">
+                <button class="btn-action" onclick="clearHistory()">Xóa hội thoại</button>
+                <button class="btn-action" onclick="toggleModal(true)">Cài đặt API</button>
+            </div>
+        </div>
+
+        <div class="chat-main">
+            <div class="chat-header">
+                <div class="current-status">
+                    <button class="menu-btn" onclick="toggleSidebar(true)">
+                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                    </button>
+                    <div class="status-indicator" id="status-indicator"></div>
+                    <span id="header-mode-title" style="font-size: 0.9rem; font-weight: 500;">Chế độ Chat thông thường</span>
+                </div>
+                <div id="response-id-display" style="font-size: 0.75rem; color: var(--text-muted);"></div>
+            </div>
+
+            <div class="chat-messages" id="chat-messages"></div>
+
+            <div class="chat-input-panel">
+                <div class="attachment-bar" id="attachment-bar"></div>
+                <div class="input-container">
+                    <div class="input-actions" id="upload-actions-wrapper">
+                        <input type="file" id="file-input" style="display: none;" multiple onchange="handleFileSelect(event)">
+                        <button class="icon-btn" onclick="document.getElementById('file-input').click()"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.414a4 4 0 00-5.656-5.656l-6.415 6.414a6 6 0 108.486 8.486L20.5 13"></path></svg></button>
+                    </div>
+                    <textarea id="user-input" placeholder="Nhập tin nhắn..." oninput="autoResize(this)" onkeydown="handleKeyDown(event)"></textarea>
+                    <button class="btn-send" onclick="sendMessage()">Gửi</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="settings-modal">
+        <div class="modal">
+            <div class="modal-header">Cấu hình API Endpoint <button class="icon-btn" onclick="toggleModal(false)">&times;</button></div>
+            <div class="form-group"><label>Base URL</label><input type="text" id="cfg-url" value="https://api.freemodel.dev"></div>
+            <div class="form-group"><label>API Key</label><input type="password" id="cfg-key" placeholder="sk-..."></div>
+            <div class="form-group"><label>Model Name</label><input type="text" id="cfg-model" value="claude-3-5-sonnet"></div>
+            <div class="modal-footer"><button class="btn-action" onclick="toggleModal(false)">Hủy</button><button class="btn-send" onclick="saveSettings()">Lưu</button></div>
+        </div>
+    </div>
+
+    <script>
+        let currentMode = 'chat', chatHistory = [], previousResponseId = null, attachedFiles = [];
+
+        window.onload = function() {
+            if (localStorage.getItem('cfg-url')) document.getElementById('cfg-url').value = localStorage.getItem('cfg-url');
+            if (localStorage.getItem('cfg-key')) document.getElementById('cfg-key').value = localStorage.getItem('cfg-key');
+            if (localStorage.getItem('cfg-model')) document.getElementById('cfg-model').value = localStorage.getItem('cfg-model');
+            appendSystemMessage("Chào mừng! Hãy mở Menu góc trái ☰ và chọn 'Cài đặt API' để nhập Key trước khi bắt đầu.");
+        };
+
+        function toggleSidebar(show) {
+            document.getElementById('sidebar').classList.toggle('open', show);
+            document.getElementById('sidebar-overlay').classList.toggle('open', show);
+        }
+
+        function toggleModal(show) {
+            document.getElementById('settings-modal').classList.toggle('open', show);
+            if(show) toggleSidebar(false);
+        }
+
+        function saveSettings() {
+            localStorage.setItem('cfg-url', document.getElementById('cfg-url').value);
+            localStorage.setItem('cfg-key', document.getElementById('cfg-key').value);
+            localStorage.setItem('cfg-model', document.getElementById('cfg-model').value);
+            toggleModal(false);
+            appendSystemMessage("Đã cập nhật cấu hình API!");
+        }
+
+        function switchMode(mode) {
+            currentMode = mode;
+            document.getElementById('mode-chat-btn').classList.toggle('active', mode === 'chat');
+            document.getElementById('mode-resp-btn').classList.toggle('active', mode === 'responses');
+            
+            const indicator = document.getElementById('status-indicator');
+            const headerTitle = document.getElementById('header-mode-title');
+
+            if (mode === 'chat') {
+                indicator.style.backgroundColor = 'var(--accent-green)';
+                headerTitle.innerText = "Chế độ Chat thông thường";
+                document.getElementById('response-id-display').innerText = "";
+            } else {
+                indicator.style.backgroundColor = 'var(--accent-purple)';
+                headerTitle.innerText = "Chế độ Responses mới";
+                if (previousResponseId) document.getElementById('response-id-display').innerText = `ID: ${previousResponseId}`;
+            }
+            toggleSidebar(false);
+            clearHistory();
+        }
+
+        function autoResize(textarea) {
+            textarea.style.height = '24px';
+            if (textarea.scrollHeight > 24) {
+                textarea.style.height = textarea.scrollHeight + 'px';
+            }
+        }
+
+        function handleKeyDown(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendMessage();
+            }
+        }
+
+        function handleFileSelect(event) {
+            const files = event.target.files;
+            for (let file of files) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    attachedFiles.push({ name: file.name, type: file.type, dataUrl: e.target.result });
+                    renderAttachments();
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function renderAttachments() {
+            const bar = document.getElementById('attachment-bar');
+            bar.innerHTML = '';
+            attachedFiles.forEach((file, index) => {
+                const item = document.createElement('div');
+                item.className = 'attachment-item';
+                item.innerHTML = `<span>${file.name}</span><span class="remove-btn" onclick="removeAttachment(${index})">&times;</span>`;
+                bar.appendChild(item);
+            });
+        }
+
+        function removeAttachment(index) { attachedFiles.splice(index, 1); renderAttachments(); }
+
+        function clearHistory() {
+            chatHistory = []; previousResponseId = null; attachedFiles = [];
+            document.getElementById('chat-messages').innerHTML = '';
+            document.getElementById('attachment-bar').innerHTML = '';
+            if (currentMode === 'responses') document.getElementById('response-id-display').innerText = "";
+            appendSystemMessage(`Đã làm mới không gian chat [${currentMode.toUpperCase()}]`);
+        }
+
+        function appendSystemMessage(text) {
+            const msgBox = document.getElementById('chat-messages');
+            const div = document.createElement('div');
+            div.className = 'message assistant';
+            div.style.borderColor = 'dashed var(--border-color)';
+            div.innerHTML = `<div class="meta">Hệ thống</div><div>${text}</div>`;
+            msgBox.appendChild(div);
+            msgBox.scrollTop = msgBox.scrollHeight;
+        }
+
+                function formatMarkdown(text) {
+            let formatted = text.replace(/```([\s\S]*?)```/g, function(match, p1) {
+                return `<pre><code>${escapeHtml(p1.trim())}</code></pre>`;
+            });
+            return formatted.split('\n').join('<br>');
+        }
+
+        function escapeHtml(string) {
+            return String(string).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
+
+        async function sendMessage() {
+            const inputEl = document.getElementById('user-input');
+            const prompt = inputEl.value.trim();
+            if (!prompt && attachedFiles.length === 0) return;
+
+            const apiKey = localStorage.getItem('cfg-key');
+            const baseUrl = localStorage.getItem('cfg-url') || "https://api.freemodel.dev";
+            const modelName = localStorage.getItem('cfg-model') || "claude-3-5-sonnet";
+
+            if (!apiKey) { alert("Vui lòng cấu hình API Key trước."); toggleModal(true); return; }
+
+            const msgBox = document.getElementById('chat-messages');
+            const userDiv = document.createElement('div');
+            userDiv.className = 'message user';
+            
+            let userContentHtml = `<div>${escapeHtml(prompt)}</div>`;
+            if (attachedFiles.length > 0) {
+                userContentHtml += `<div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:8px;">`;
+                attachedFiles.forEach(f => {
+                    if (f.type.startsWith('image/')) userContentHtml += `<img src="${f.dataUrl}" style="max-width:80px; max-height:80px; border-radius:4px; border:1px solid var(--border-color)"/>`;
+                    else userContentHtml += `<div style="font-size:0.8rem; background:rgba(255,255,255,0.05); padding:4px 8px; border-radius:4px; border:1px solid var(--border-color)">📄 ${f.name}</div>`;
+                });
+                userContentHtml += `</div>`;
+            }
+            userDiv.innerHTML = userContentHtml;
+            msgBox.appendChild(userDiv);
+            
+            inputEl.value = ''; autoResize(inputEl);
+
+            const assistantDiv = document.createElement('div');
+            assistantDiv.className = 'message assistant';
+            assistantDiv.innerHTML = `<div class="meta">${currentMode === 'chat' ? 'Assistant' : 'Responses API'}</div><div class="content-text">Đang trả lời...</div>`;
+            msgBox.appendChild(assistantDiv);
+            msgBox.scrollTop = msgBox.scrollHeight;
+
+            const contentTextEl = assistantDiv.querySelector('.content-text');
+            const currentTurnFiles = [...attachedFiles];
+            attachedFiles = []; renderAttachments();
+
+            try {
+                let endpoint = "", payload = {};
+
+                // Gom chung cấu trúc dữ liệu đầu vào bao gồm Text và File
+                let formattedInput = [];
+                if (prompt) formattedInput.push({ type: "text", text: prompt });
+                
+                currentTurnFiles.forEach(file => {
+                    if (file.type.startsWith('image/')) {
+                        formattedInput.push({ type: "image_url", image_url: { url: file.dataUrl } });
+                    } else {
+                        formattedInput.push({ type: "text", text: `[Tệp: ${file.name}]\n${file.dataUrl}` });
+                    }
+                });
+
+                if (currentMode === 'chat') {
+                    endpoint = `${baseUrl}/v1/chat/completions`;
+                    
+                    // Nếu không có tệp đính kèm, sử dụng chuỗi văn bản thường cho lịch sử tối ưu.
+                    // Nếu có tệp, sử dụng cấu trúc mảng hỗn hợp (Object Array) chuẩn OpenAI.
+                    const finalContent = (formattedInput.length === 1 && formattedInput[0].type === "text") 
+                        ? formattedInput[0].text 
+                        : formattedInput;
+
+                    chatHistory.push({ role: "user", content: finalContent });
+                    payload = { model: modelName, messages: chatHistory, stream: true };
+                } else {
+                    endpoint = `${baseUrl}/v1/responses`;
+                    payload = { model: modelName, input: formattedInput, stream: true };
+                    if (previousResponseId) payload.previous_response_id = previousResponseId;
+                }
+
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) throw new Error(`HTTP Error ${response.status}`);
+
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder("utf-8");
+                let responseText = "";
+                contentTextEl.innerHTML = "";
+
+                while (true) {
+                    const { value, done } = await reader.read();
+                    if (done) break;
+
+                    const chunk = decoder.decode(value, { stream: true });
+                    const lines = chunk.split('\n');
+                    
+                    for (let line of lines) {
+                        let cleanLine = line.trim();
+                        if (!cleanLine || cleanLine === 'data: [DONE]') continue;
+                        if (cleanLine.startsWith('data: ')) {
+                            try {
+                                const parsed = JSON.parse(cleanLine.slice(6));
+                                if (currentMode === 'chat') {
+                                    responseText += parsed.choices?.[0]?.delta?.content || "";
+                                } else {
+                                    if (parsed.id && !previousResponseId) {
+                                        previousResponseId = parsed.id;
+                                        document.getElementById('response-id-display').innerText = `ID: ${previousResponseId}`;
+                                    }
+                                    responseText += parsed.delta?.content || parsed.output?.text || parsed.choices?.[0]?.delta?.content || "";
+                                }
+                                contentTextEl.innerHTML = formatMarkdown(responseText);
+                                msgBox.scrollTop = msgBox.scrollHeight;
+                            } catch (e) {}
+                        }
+                    }
+                }
+                if (currentMode === 'chat') chatHistory.push({ role: "assistant", content: responseText });
+            } catch (error) {
+                contentTextEl.style.color = '#ef4444';
+                contentTextEl.innerText = `Lỗi: ${error.message}`;
+            }
+        }
+    </script>
+</body>
+</html>
