@@ -218,12 +218,8 @@
             <div class="form-group">
                 <label>🚀 Provider Preset</label>
                 <select id="cfg-preset" onchange="applyPreset(this.value)">
+                    <option value="freemodel" selected>freemodel.dev (mặc định)</option>
                     <option value="custom">— Tự tùy chỉnh —</option>
-                    <option value="freemodel">freemodel.dev (free $300 credits)</option>
-                    <option value="openrouter">OpenRouter (free models)</option>
-                    <option value="groq">Groq (free tier, fast)</option>
-                    <option value="gemini">Google Gemini (free tier)</option>
-                    <option value="anthropic">Anthropic (claude.ai key)</option>
                 </select>
             </div>
 
@@ -272,11 +268,7 @@
     let isSending = false;
 
     const PRESETS = {
-        freemodel:  { url: 'https://api.freemodel.dev',              model: 'gpt-5.4-mini',              label: 'freemodel.dev' },
-        openrouter: { url: 'https://openrouter.ai/api',              model: 'mistralai/mistral-7b-instruct:free', label: 'OpenRouter' },
-        groq:       { url: 'https://api.groq.com/openai',            model: 'llama-3.1-8b-instant',      label: 'Groq' },
-        gemini:     { url: 'https://generativelanguage.googleapis.com/v1beta', model: 'gemini-1.5-flash', label: 'Gemini' },
-        anthropic:  { url: 'https://api.anthropic.com',              model: 'claude-3-5-haiku-20241022',  label: 'Anthropic' },
+        freemodel:  { url: 'https://api.freemodel.dev', model: 'claude-3-5-sonnet', label: 'freemodel.dev' },
     };
 
     /* ─────────────── Init ─────────────── */
