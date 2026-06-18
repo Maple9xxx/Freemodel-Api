@@ -16,660 +16,571 @@
             --accent-purple: #8b5cf6;
             --accent-green: #10b981;
             --accent-blue: #3b82f6;
+            --accent-orange: #f59e0b;
+            --accent-red: #ef4444;
             --user-bubble: #2a2b36;
             --assistant-bubble: #1e1f29;
         }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background-color: var(--bg-main); color: var(--text-main); display: flex; height: 100vh; overflow: hidden; }
+        .app-container { display: flex; width: 100%; height: 100%; position: relative; }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-        }
-
-        body {
-            background-color: var(--bg-main);
-            color: var(--text-main);
-            display: flex;
-            height: 100vh;
-            overflow: hidden;
-        }
-
-        .app-container {
-            display: flex;
-            width: 100%;
-            height: 100%;
-            position: relative;
-        }
-
-        /* Sidebar Panel */
+        /* ─── Sidebar ─── */
         .sidebar {
-            width: 280px;
-            background-color: var(--bg-sidebar);
+            width: 280px; background-color: var(--bg-sidebar);
             border-right: 1px solid var(--border-color);
-            display: flex;
-            flex-direction: column;
-            padding: 20px;
-            justify-content: space-between;
-            flex-shrink: 0;
+            display: flex; flex-direction: column; padding: 20px;
+            justify-content: space-between; flex-shrink: 0;
             transition: left 0.3s ease;
         }
-
-        .sidebar-header-mobile {
-            display: none;
-            justify-content: flex-end;
-            margin-bottom: -10px;
-        }
-
-        .brand {
-            font-size: 1.2rem;
-            font-weight: bold;
-            margin-bottom: 30px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .brand-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background-color: var(--accent-green);
-        }
-
-        .mode-section {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            flex-grow: 1;
-        }
-
-        .section-title {
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: var(--text-muted);
-            margin-bottom: 5px;
-        }
-
-        .btn-mode {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 12px 15px;
-            background-color: transparent;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            color: var(--text-main);
-            cursor: pointer;
-            text-align: left;
-            transition: all 0.2s;
-            font-size: 0.95rem;
-        }
-
+        .sidebar-header-mobile { display: none; justify-content: flex-end; margin-bottom: -10px; }
+        .brand { font-size: 1.2rem; font-weight: bold; margin-bottom: 30px; display: flex; align-items: center; gap: 10px; }
+        .brand-dot { width: 10px; height: 10px; border-radius: 50%; background-color: var(--accent-green); }
+        .mode-section { display: flex; flex-direction: column; gap: 12px; flex-grow: 1; }
+        .section-title { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 5px; margin-top: 10px; }
+        .btn-mode { display: flex; align-items: center; justify-content: space-between; padding: 12px 15px; background-color: transparent; border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-main); cursor: pointer; text-align: left; transition: all 0.2s; font-size: 0.95rem; }
         .btn-mode:hover { background-color: var(--bg-input); }
-        .btn-mode.active {
-            border-color: var(--accent-blue);
-            background-color: rgba(59, 130, 246, 0.1);
-        }
-
-        .badge {
-            font-size: 0.75rem;
-            padding: 2px 6px;
-            border-radius: 4px;
-            background-color: var(--border-color);
-            color: var(--text-muted);
-        }
-
-        .btn-mode.active .badge-chat { background-color: rgba(16, 185, 129, 0.2); color: var(--accent-green); }
-        .btn-mode.active .badge-resp { background-color: rgba(139, 92, 246, 0.2); color: var(--accent-purple); }
-
-        .footer-actions {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .btn-action {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            padding: 10px;
-            background-color: var(--bg-input);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            color: var(--text-main);
-            cursor: pointer;
-            transition: background 0.2s;
-            font-size: 0.9rem;
-        }
-
+        .btn-mode.active { border-color: var(--accent-blue); background-color: rgba(59,130,246,0.1); }
+        .badge { font-size: 0.75rem; padding: 2px 6px; border-radius: 4px; background-color: var(--border-color); color: var(--text-muted); }
+        .btn-mode.active .badge-chat { background-color: rgba(16,185,129,0.2); color: var(--accent-green); }
+        .btn-mode.active .badge-resp { background-color: rgba(139,92,246,0.2); color: var(--accent-purple); }
+        .footer-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+        .btn-action { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 10px; background-color: var(--bg-input); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-main); cursor: pointer; transition: background 0.2s; font-size: 0.9rem; }
         .btn-action:hover { background-color: var(--border-color); }
+        .btn-action.danger { border-color: rgba(239,68,68,0.3); }
+        .btn-action.danger:hover { background-color: rgba(239,68,68,0.15); color: var(--accent-red); }
 
-        /* Main Chat Area */
-        .chat-main {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            background-color: var(--bg-chat);
-            height: 100%;
+        /* ─── CORS Status Banner ─── */
+        .cors-banner {
+            display: none; margin: 0 0 10px 0; padding: 8px 12px;
+            border-radius: 8px; font-size: 0.8rem; line-height: 1.5;
         }
+        .cors-banner.warn { background: rgba(245,158,11,0.15); border: 1px solid rgba(245,158,11,0.4); color: var(--accent-orange); }
+        .cors-banner.ok   { background: rgba(16,185,129,0.1);  border: 1px solid rgba(16,185,129,0.3);  color: var(--accent-green); }
 
-        .chat-header {
-            height: 60px;
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 24px;
-            background-color: rgba(22, 22, 26, 0.8);
-            backdrop-filter: blur(8px);
-            z-index: 10;
-        }
-
-        .current-status {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .menu-btn {
-            display: none;
-            background: transparent;
-            border: none;
-            color: var(--text-main);
-            cursor: pointer;
-            padding: 4px;
-            margin-right: 4px;
-        }
-
-        .status-indicator {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background-color: var(--accent-green);
-        }
-
-        .chat-messages {
-            flex-grow: 1;
-            overflow-y: auto;
-            padding: 24px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .message {
-            display: flex;
-            flex-direction: column;
-            max-width: 85%;
-            padding: 14px 18px;
-            border-radius: 12px;
-            line-height: 1.5;
-            font-size: 0.98rem;
-            word-break: break-word;
-        }
-
-        .message.user {
-            align-self: flex-end;
-            background-color: var(--user-bubble);
-            border-bottom-right-radius: 2px;
-        }
-
-        .message.assistant {
-            align-self: flex-start;
-            background-color: var(--assistant-bubble);
-            border-bottom-left-radius: 2px;
-            border: 1px solid var(--border-color);
-        }
-
-        .message .meta {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            margin-bottom: 5px;
-            font-weight: 600;
-        }
-
-        .message pre {
-            background-color: #0d0d10;
-            padding: 12px;
-            border-radius: 6px;
-            overflow-x: auto;
-            margin: 8px 0;
-            border: 1px solid var(--border-color);
-        }
-
+        /* ─── Main Chat ─── */
+        .chat-main { flex-grow: 1; display: flex; flex-direction: column; background-color: var(--bg-chat); height: 100%; }
+        .chat-header { height: 60px; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; background-color: rgba(22,22,26,0.8); backdrop-filter: blur(8px); z-index: 10; }
+        .current-status { display: flex; align-items: center; gap: 8px; }
+        .menu-btn { display: none; background: transparent; border: none; color: var(--text-main); cursor: pointer; padding: 4px; margin-right: 4px; }
+        .status-indicator { width: 8px; height: 8px; border-radius: 50%; background-color: var(--accent-green); transition: background 0.3s; }
+        .status-indicator.error { background-color: var(--accent-red); }
+        .status-indicator.loading { background-color: var(--accent-orange); animation: pulse 1s infinite; }
+        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+        .chat-messages { flex-grow: 1; overflow-y: auto; padding: 24px; display: flex; flex-direction: column; gap: 20px; }
+        .message { display: flex; flex-direction: column; max-width: 85%; padding: 14px 18px; border-radius: 12px; line-height: 1.5; font-size: 0.98rem; word-break: break-word; }
+        .message.user { align-self: flex-end; background-color: var(--user-bubble); border-bottom-right-radius: 2px; }
+        .message.assistant { align-self: flex-start; background-color: var(--assistant-bubble); border-bottom-left-radius: 2px; border: 1px solid var(--border-color); }
+        .message.system-msg { align-self: center; background-color: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.25); border-radius: 10px; max-width: 92%; font-size: 0.87rem; color: #d4a84b; }
+        .message .meta { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 5px; font-weight: 600; }
+        .message pre { background-color: #0d0d10; padding: 12px; border-radius: 6px; overflow-x: auto; margin: 8px 0; border: 1px solid var(--border-color); }
         .message code { font-family: monospace; font-size: 0.9rem; }
+        .message .error-hint { margin-top: 10px; padding: 10px; background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.25); border-radius: 8px; font-size: 0.85rem; }
+        .message .error-hint a { color: var(--accent-blue); text-decoration: underline; cursor: pointer; }
 
+        /* ─── Attachment ─── */
         .attachment-bar { display: flex; flex-wrap: wrap; gap: 10px; padding-bottom: 10px; }
-        .attachment-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background-color: var(--bg-input);
-            border: 1px solid var(--border-color);
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 0.85rem;
-        }
+        .attachment-item { display: flex; align-items: center; gap: 8px; background-color: var(--bg-input); border: 1px solid var(--border-color); padding: 6px 12px; border-radius: 6px; font-size: 0.85rem; }
         .attachment-item .remove-btn { cursor: pointer; color: #ef4444; font-weight: bold; }
 
-        .chat-input-panel {
-            padding: 20px 24px;
-            border-top: 1px solid var(--border-color);
-            background-color: var(--bg-chat);
-        }
-
-        .input-container {
-            display: flex;
-            gap: 12px;
-            background-color: var(--bg-input);
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            padding: 8px 12px;
-            align-items: flex-end;
-        }
-
+        /* ─── Input Panel ─── */
+        .chat-input-panel { padding: 20px 24px; border-top: 1px solid var(--border-color); background-color: var(--bg-chat); }
+        .input-container { display: flex; gap: 12px; background-color: var(--bg-input); border: 1px solid var(--border-color); border-radius: 10px; padding: 8px 12px; align-items: flex-end; }
         .input-container:focus-within { border-color: var(--accent-blue); }
-
-        textarea {
-            flex-grow: 1;
-            background: transparent;
-            border: none;
-            color: var(--text-main);
-            resize: none;
-            height: 24px;
-            max-height: 160px;
-            font-size: 0.95rem;
-            outline: none;
-            line-height: 24px;
-        }
-
+        textarea { flex-grow: 1; background: transparent; border: none; color: var(--text-main); resize: none; height: 24px; max-height: 160px; font-size: 0.95rem; outline: none; line-height: 24px; }
         .input-actions { display: flex; align-items: center; gap: 8px; }
-        .icon-btn {
-            background: transparent;
-            border: none;
-            color: var(--text-muted);
-            cursor: pointer;
-            padding: 6px;
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .icon-btn:hover { color: var(--text-main); background-color: var(--border-color); }
+        .icon-btn { background: transparent; border: none; color: var(--text-muted); cursor: pointer; padding: 6px; border-radius: 6px; display: flex; align-items: center; justify-content: center; }
+        .icon-btn:hover { background-color: var(--border-color); color: var(--text-main); }
+        .send-btn { background-color: var(--accent-blue); color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 0.95rem; transition: background 0.2s; }
+        .send-btn:hover { background-color: #2563eb; }
+        .send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-        .btn-send {
-            background-color: var(--accent-blue);
-            color: white;
-            padding: 8px 16px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 500;
-        }
+        /* ─── Modal ─── */
+        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 100; align-items: center; justify-content: center; }
+        .modal-overlay.active { display: flex; }
+        .modal-box { background-color: var(--bg-sidebar); border: 1px solid var(--border-color); border-radius: 12px; padding: 24px; width: 460px; max-width: 95vw; max-height: 90vh; overflow-y: auto; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; font-weight: bold; margin-bottom: 20px; font-size: 1.05rem; }
+        .form-group { margin-bottom: 16px; }
+        .form-group label { display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 6px; }
+        .form-group input, .form-group select { width: 100%; padding: 10px 12px; background-color: var(--bg-input); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-main); font-size: 0.95rem; outline: none; }
+        .form-group input:focus, .form-group select:focus { border-color: var(--accent-blue); }
+        .form-group select option { background: var(--bg-sidebar); }
+        .modal-actions { display: flex; gap: 10px; justify-content: flex-end; flex-wrap: wrap; margin-top: 20px; }
+        .btn-primary { padding: 9px 18px; background-color: var(--accent-blue); color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 0.95rem; }
+        .btn-secondary { padding: 9px 18px; background-color: var(--bg-input); color: var(--text-main); border: 1px solid var(--border-color); border-radius: 8px; cursor: pointer; font-size: 0.95rem; }
+        .btn-test { padding: 9px 18px; background-color: rgba(16,185,129,0.15); color: var(--accent-green); border: 1px solid rgba(16,185,129,0.3); border-radius: 8px; cursor: pointer; font-size: 0.95rem; }
+        .btn-test:hover { background-color: rgba(16,185,129,0.25); }
+        .toggle-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-top: 1px solid var(--border-color); margin-top: 4px; }
+        .toggle-label { font-size: 0.9rem; }
+        .toggle-sub  { font-size: 0.78rem; color: var(--text-muted); margin-top: 2px; }
+        .toggle-switch { position: relative; width: 44px; height: 24px; flex-shrink: 0; }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; inset: 0; background: var(--border-color); border-radius: 24px; cursor: pointer; transition: 0.3s; }
+        .slider:before { content: ""; position: absolute; width: 18px; height: 18px; left: 3px; top: 3px; background: white; border-radius: 50%; transition: 0.3s; }
+        input:checked + .slider { background: var(--accent-blue); }
+        input:checked + .slider:before { transform: translateX(20px); }
+        .test-result { margin-top: 12px; padding: 10px 14px; border-radius: 8px; font-size: 0.85rem; display: none; }
+        .test-result.ok   { background: rgba(16,185,129,0.1);  border: 1px solid rgba(16,185,129,0.3);  color: var(--accent-green); }
+        .test-result.fail { background: rgba(239,68,68,0.1);   border: 1px solid rgba(239,68,68,0.3);   color: var(--accent-red); }
 
-        /* Sidebar Mobile Overlay */
-        .sidebar-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(0,0,0,0.5);
-            z-index: 98;
-            display: none;
-        }
+        /* ─── Responses mode extras ─── */
+        .response-id-bar { display: none; align-items: center; gap: 10px; padding: 0 24px; height: 36px; background: rgba(139,92,246,0.07); border-bottom: 1px solid var(--border-color); font-size: 0.82rem; color: var(--text-muted); }
+        .response-id-bar.active { display: flex; }
 
-        /* Modal Settings */
-        .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
-            background-color: rgba(0, 0, 0, 0.6);
-            display: flex; align-items: center; justify-content: center;
-            z-index: 999; opacity: 0; pointer-events: none;
-            transition: opacity 0.2s;
-        }
-        .modal-overlay.open { opacity: 1; pointer-events: auto; }
-
-        .modal {
-            background-color: var(--bg-sidebar);
-            border: 1px solid var(--border-color);
-            width: 90%; max-width: 480px;
-            border-radius: 12px; padding: 24px;
-            display: flex; flex-direction: column; gap: 18px;
-        }
-
-        .modal-header { display: flex; justify-content: space-between; align-items: center; font-weight: bold; }
-        .form-group { display: flex; flex-direction: column; gap: 6px; }
-        .form-group label { font-size: 0.85rem; color: var(--text-muted); }
-        .form-group input {
-            background-color: var(--bg-input); border: 1px solid var(--border-color);
-            padding: 10px 12px; border-radius: 6px; color: var(--text-main); outline: none;
-        }
-        .modal-footer { display: flex; justify-content: flex-end; gap: 10px; }
-
-        /* Responsive Mobile Layout */
+        /* ─── Mobile ─── */
         @media (max-width: 768px) {
-            .menu-btn { display: block; }
+            .sidebar { position: absolute; top: 0; left: -290px; height: 100%; z-index: 50; border-right: 1px solid var(--border-color); }
+            .sidebar.open { left: 0; box-shadow: 4px 0 20px rgba(0,0,0,0.5); }
             .sidebar-header-mobile { display: flex; }
-            .sidebar {
-                position: fixed;
-                top: 0;
-                left: -280px;
-                height: 100%;
-                z-index: 999;
-                box-shadow: 5px 0 15px rgba(0,0,0,0.5);
-            }
-            .sidebar.open { left: 0; }
-            .sidebar-overlay.open { display: block; }
-            .chat-messages { padding: 16px; }
-            .chat-input-panel { padding: 12px 16px; }
-            .message { max-width: 90%; }
+            .menu-btn { display: flex; }
         }
-
-        .hidden { display: none !important; }
     </style>
 </head>
 <body>
+<div class="app-container">
 
-    <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar(false)"></div>
-
-    <div class="app-container">
-        <div class="sidebar" id="sidebar">
+    <!-- ─── Sidebar ─── -->
+    <div class="sidebar" id="sidebar">
+        <div>
             <div class="sidebar-header-mobile">
-                <button class="icon-btn" onclick="toggleSidebar(false)" style="font-size: 1.5rem;">&times;</button>
+                <button class="icon-btn" onclick="toggleSidebar(false)">✕</button>
             </div>
+            <div class="brand"><div class="brand-dot"></div>Freemodel Client</div>
+
             <div class="mode-section">
-                <div class="brand"><div class="brand-dot"></div>Freemodel Client</div>
-                <div class="section-title">Chế độ hoạt nhiên</div>
+                <div class="section-title">Chế độ hoạt động</div>
                 <button class="btn-mode active" id="mode-chat-btn" onclick="switchMode('chat')">
-                    <span>/v1/chat/completions</span><span class="badge badge-chat">Chat</span>
+                    /v1/chat/completions<span class="badge badge-chat">Chat</span>
                 </button>
                 <button class="btn-mode" id="mode-resp-btn" onclick="switchMode('responses')">
-                    <span>/v1/responses</span><span class="badge badge-resp">Responses</span>
+                    /v1/responses<span class="badge badge-resp">Responses</span>
                 </button>
-            </div>
-            <div class="footer-actions">
-                <button class="btn-action" onclick="clearHistory()">Xóa hội thoại</button>
-                <button class="btn-action" onclick="toggleModal(true)">Cài đặt API</button>
+
+                <div class="section-title">Provider</div>
+                <div id="cors-banner" class="cors-banner warn">
+                    ⚠️ <strong>CORS Proxy đang BẬT</strong><br>
+                    Dùng corsproxy.io làm trung gian để bypass CORS.
+                </div>
             </div>
         </div>
 
-        <div class="chat-main">
-            <div class="chat-header">
-                <div class="current-status">
-                    <button class="menu-btn" onclick="toggleSidebar(true)">
-                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"></path></svg>
-                    </button>
-                    <div class="status-indicator" id="status-indicator"></div>
-                    <span id="header-mode-title" style="font-size: 0.9rem; font-weight: 500;">Chế độ Chat thông thường</span>
-                </div>
-                <div id="response-id-display" style="font-size: 0.75rem; color: var(--text-muted);"></div>
+        <div class="footer-actions">
+            <button class="btn-action" onclick="toggleModal(true)">⚙️ Cài đặt API</button>
+            <button class="btn-action danger" onclick="clearConversation()">🗑 Xóa hội thoại</button>
+        </div>
+    </div>
+
+    <!-- ─── Main ─── -->
+    <div class="chat-main">
+        <div class="chat-header">
+            <div class="current-status">
+                <button class="menu-btn" onclick="toggleSidebar(true)">☰</button>
+                <div class="status-indicator" id="status-dot"></div>
+                <span id="header-mode-title" style="font-size:0.9rem;font-weight:500;">Chế độ Chat thông thường</span>
             </div>
+            <div style="display:flex;align-items:center;gap:8px;">
+                <span id="provider-badge" style="font-size:0.78rem;padding:3px 8px;background:rgba(59,130,246,0.15);border:1px solid rgba(59,130,246,0.3);border-radius:6px;color:var(--accent-blue);">freemodel.dev</span>
+                <span id="response-id-display" style="font-size:0.78rem;color:var(--text-muted);"></span>
+            </div>
+        </div>
 
-            <div class="chat-messages" id="chat-messages"></div>
+        <div id="chat-messages" class="chat-messages">
+            <div class="message assistant">
+                <div class="meta">System</div>
+                <div>👋 Chào mừng! Vào <strong>⚙️ Cài đặt API</strong> để nhập API Key và chọn provider.<br><br>
+                Nếu gặp lỗi <code>Failed to fetch</code>, hãy bật <strong>CORS Proxy</strong> trong cài đặt hoặc đổi sang provider hỗ trợ trình duyệt.</div>
+            </div>
+        </div>
 
-            <div class="chat-input-panel">
-                <div class="attachment-bar" id="attachment-bar"></div>
-                <div class="input-container">
-                    <div class="input-actions" id="upload-actions-wrapper">
-                        <input type="file" id="file-input" style="display: none;" multiple onchange="handleFileSelect(event)">
-                        <button class="icon-btn" onclick="document.getElementById('file-input').click()"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.414a4 4 0 00-5.656-5.656l-6.415 6.414a6 6 0 108.486 8.486L20.5 13"></path></svg></button>
-                    </div>
-                    <textarea id="user-input" placeholder="Nhập tin nhắn..." oninput="autoResize(this)" onkeydown="handleKeyDown(event)"></textarea>
-                    <button class="btn-send" onclick="sendMessage()">Gửi</button>
+        <div class="chat-input-panel">
+            <div id="attachment-bar" class="attachment-bar" style="display:none"></div>
+            <div class="input-container">
+                <label class="icon-btn" title="Đính kèm ảnh/file">
+                    📎<input type="file" id="file-input" accept="image/*,.pdf,.txt,.md,.json,.csv" multiple style="display:none" onchange="handleFileAttach(this)">
+                </label>
+                <textarea id="user-input" placeholder="Nhập tin nhắn..." onkeydown="handleKeyDown(event)" oninput="autoResize(this)"></textarea>
+                <div class="input-actions">
+                    <button class="send-btn" id="send-btn" onclick="sendMessage()">Gửi</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="modal-overlay" id="settings-modal">
-        <div class="modal">
-            <div class="modal-header">Cấu hình API Endpoint <button class="icon-btn" onclick="toggleModal(false)">&times;</button></div>
-            <div class="form-group"><label>Base URL</label><input type="text" id="cfg-url" value="https://api.freemodel.dev"></div>
-            <div class="form-group"><label>API Key</label><input type="password" id="cfg-key" placeholder="sk-..."></div>
-            <div class="form-group"><label>Model Name</label><input type="text" id="cfg-model" value="claude-3-5-sonnet"></div>
-            <div class="modal-footer"><button class="btn-action" onclick="toggleModal(false)">Hủy</button><button class="btn-send" onclick="saveSettings()">Lưu</button></div>
+    <!-- ─── Settings Modal ─── -->
+    <div class="modal-overlay" id="modal-overlay" onclick="handleOverlayClick(event)">
+        <div class="modal-box">
+            <div class="modal-header">
+                ⚙️ Cấu hình API Endpoint
+                <button class="icon-btn" onclick="toggleModal(false)" style="font-size:1.2rem;">×</button>
+            </div>
+
+            <!-- Provider Preset -->
+            <div class="form-group">
+                <label>🚀 Provider Preset</label>
+                <select id="cfg-preset" onchange="applyPreset(this.value)">
+                    <option value="custom">— Tự tùy chỉnh —</option>
+                    <option value="freemodel">freemodel.dev (free $300 credits)</option>
+                    <option value="openrouter">OpenRouter (free models)</option>
+                    <option value="groq">Groq (free tier, fast)</option>
+                    <option value="gemini">Google Gemini (free tier)</option>
+                    <option value="anthropic">Anthropic (claude.ai key)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Base URL</label>
+                <input type="text" id="cfg-url" placeholder="https://api.freemodel.dev">
+            </div>
+            <div class="form-group">
+                <label>API Key</label>
+                <input type="password" id="cfg-key" placeholder="sk-... hoặc key của provider">
+            </div>
+            <div class="form-group">
+                <label>Model Name</label>
+                <input type="text" id="cfg-model" placeholder="tên model">
+            </div>
+
+            <!-- CORS Proxy Toggle -->
+            <div class="toggle-row">
+                <div>
+                    <div class="toggle-label">🌐 CORS Proxy (corsproxy.io)</div>
+                    <div class="toggle-sub">Bật nếu bị lỗi "Failed to fetch" hoặc CORS error</div>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="cfg-cors-proxy" onchange="updateCorsWarning()">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div id="test-result" class="test-result"></div>
+
+            <div class="modal-actions">
+                <button class="btn-test" onclick="testConnection()">🔌 Test kết nối</button>
+                <button class="btn-secondary" onclick="toggleModal(false)">Hủy</button>
+                <button class="btn-primary" onclick="saveConfig()">💾 Lưu</button>
+            </div>
         </div>
     </div>
+</div>
 
-    <script>
-        let currentMode = 'chat', chatHistory = [], previousResponseId = null, attachedFiles = [];
+<script>
+    /* ─────────────── State ─────────────── */
+    let currentMode = 'chat';
+    let chatHistory  = [];
+    let attachedFiles = [];
+    let previousResponseId = null;
+    let isSending = false;
 
-        window.onload = function() {
-            if (localStorage.getItem('cfg-url')) document.getElementById('cfg-url').value = localStorage.getItem('cfg-url');
-            if (localStorage.getItem('cfg-key')) document.getElementById('cfg-key').value = localStorage.getItem('cfg-key');
-            if (localStorage.getItem('cfg-model')) document.getElementById('cfg-model').value = localStorage.getItem('cfg-model');
-            appendSystemMessage("Chào mừng! Hãy mở Menu góc trái ☰ và chọn 'Cài đặt API' để nhập Key trước khi bắt đầu.");
-        };
+    const PRESETS = {
+        freemodel:  { url: 'https://api.freemodel.dev',              model: 'gpt-5.4-mini',              label: 'freemodel.dev' },
+        openrouter: { url: 'https://openrouter.ai/api',              model: 'mistralai/mistral-7b-instruct:free', label: 'OpenRouter' },
+        groq:       { url: 'https://api.groq.com/openai',            model: 'llama-3.1-8b-instant',      label: 'Groq' },
+        gemini:     { url: 'https://generativelanguage.googleapis.com/v1beta', model: 'gemini-1.5-flash', label: 'Gemini' },
+        anthropic:  { url: 'https://api.anthropic.com',              model: 'claude-3-5-haiku-20241022',  label: 'Anthropic' },
+    };
 
-        function toggleSidebar(show) {
-            document.getElementById('sidebar').classList.toggle('open', show);
-            document.getElementById('sidebar-overlay').classList.toggle('open', show);
+    /* ─────────────── Init ─────────────── */
+    window.addEventListener('load', () => {
+        const saved = (k, fallback='') => localStorage.getItem(k) || fallback;
+        document.getElementById('cfg-url').value      = saved('cfg-url',   PRESETS.freemodel.url);
+        document.getElementById('cfg-key').value      = saved('cfg-key');
+        document.getElementById('cfg-model').value    = saved('cfg-model', PRESETS.freemodel.model);
+        document.getElementById('cfg-cors-proxy').checked = saved('cfg-cors-proxy') === 'true';
+        updateCorsWarning();
+        updateProviderBadge();
+    });
+
+    /* ─────────────── Config helpers ─────────────── */
+    function applyPreset(val) {
+        if (!PRESETS[val]) return;
+        const p = PRESETS[val];
+        document.getElementById('cfg-url').value   = p.url;
+        document.getElementById('cfg-model').value = p.model;
+        document.getElementById('test-result').style.display = 'none';
+    }
+
+    function saveConfig() {
+        localStorage.setItem('cfg-url',        document.getElementById('cfg-url').value.trim());
+        localStorage.setItem('cfg-key',        document.getElementById('cfg-key').value.trim());
+        localStorage.setItem('cfg-model',      document.getElementById('cfg-model').value.trim());
+        localStorage.setItem('cfg-cors-proxy', document.getElementById('cfg-cors-proxy').checked);
+        updateCorsWarning();
+        updateProviderBadge();
+        toggleModal(false);
+    }
+
+    function updateCorsWarning() {
+        const on = document.getElementById('cfg-cors-proxy').checked;
+        document.getElementById('cors-banner').style.display = on ? 'block' : 'none';
+    }
+
+    function updateProviderBadge() {
+        const url = localStorage.getItem('cfg-url') || '';
+        let label = 'custom';
+        for (const [k, v] of Object.entries(PRESETS)) {
+            if (url.includes(new URL(v.url).hostname.split('.')[0])) { label = v.label; break; }
+        }
+        document.getElementById('provider-badge').textContent = label;
+    }
+
+    /* ─────────────── Build fetch URL (with optional CORS proxy) ─────────────── */
+    function buildEndpoint(baseUrl, path) {
+        const useCorsProxy = localStorage.getItem('cfg-cors-proxy') === 'true';
+        const full = `${baseUrl.replace(/\/$/, '')}${path}`;
+        return useCorsProxy ? `https://corsproxy.io/?url=${encodeURIComponent(full)}` : full;
+    }
+
+    /* ─────────────── Connection Test ─────────────── */
+    async function testConnection() {
+        const resultEl = document.getElementById('test-result');
+        resultEl.className = 'test-result';
+        resultEl.style.display = 'block';
+        resultEl.textContent = '🔄 Đang test...';
+
+        const baseUrl  = document.getElementById('cfg-url').value.trim()   || PRESETS.freemodel.url;
+        const apiKey   = document.getElementById('cfg-key').value.trim();
+        const model    = document.getElementById('cfg-model').value.trim()  || PRESETS.freemodel.model;
+
+        if (!apiKey) {
+            resultEl.className = 'test-result fail';
+            resultEl.textContent = '❌ Chưa nhập API Key!';
+            return;
         }
 
-        function toggleModal(show) {
-            document.getElementById('settings-modal').classList.toggle('open', show);
-            if(show) toggleSidebar(false);
-        }
-
-        function saveSettings() {
-            localStorage.setItem('cfg-url', document.getElementById('cfg-url').value);
-            localStorage.setItem('cfg-key', document.getElementById('cfg-key').value);
-            localStorage.setItem('cfg-model', document.getElementById('cfg-model').value);
-            toggleModal(false);
-            appendSystemMessage("Đã cập nhật cấu hình API!");
-        }
-
-        function switchMode(mode) {
-            currentMode = mode;
-            document.getElementById('mode-chat-btn').classList.toggle('active', mode === 'chat');
-            document.getElementById('mode-resp-btn').classList.toggle('active', mode === 'responses');
-            
-            const indicator = document.getElementById('status-indicator');
-            const headerTitle = document.getElementById('header-mode-title');
-
-            if (mode === 'chat') {
-                indicator.style.backgroundColor = 'var(--accent-green)';
-                headerTitle.innerText = "Chế độ Chat thông thường";
-                document.getElementById('response-id-display').innerText = "";
+        try {
+            const endpoint = buildEndpoint(baseUrl, '/v1/chat/completions');
+            const res = await fetch(endpoint, {
+                method: 'POST',
+                headers: { 'Authorization': `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
+                body: JSON.stringify({ model, messages: [{ role: 'user', content: 'Say "OK" only.' }], max_tokens: 10 })
+            });
+            if (res.ok) {
+                resultEl.className = 'test-result ok';
+                resultEl.textContent = `✅ Kết nối thành công! (HTTP ${res.status})`;
             } else {
-                indicator.style.backgroundColor = 'var(--accent-purple)';
-                headerTitle.innerText = "Chế độ Responses mới";
-                if (previousResponseId) document.getElementById('response-id-display').innerText = `ID: ${previousResponseId}`;
+                const txt = await res.text().catch(() => '');
+                resultEl.className = 'test-result fail';
+                resultEl.textContent = `❌ HTTP ${res.status}: ${txt.slice(0,120)}`;
             }
-            toggleSidebar(false);
-            clearHistory();
-        }
-
-        function autoResize(textarea) {
-            textarea.style.height = '24px';
-            if (textarea.scrollHeight > 24) {
-                textarea.style.height = textarea.scrollHeight + 'px';
+        } catch (err) {
+            resultEl.className = 'test-result fail';
+            if (err.message.includes('Failed to fetch') || err.message.includes('NetworkError') || err.name === 'TypeError') {
+                resultEl.innerHTML = `❌ <strong>CORS Error / Network Error</strong><br>→ Hãy bật <em>CORS Proxy</em> ở trên, hoặc đổi sang provider khác.`;
+            } else {
+                resultEl.textContent = `❌ ${err.message}`;
             }
         }
+    }
 
-        function handleKeyDown(event) {
-            if (event.key === 'Enter' && !event.shiftKey) {
-                event.preventDefault();
-                sendMessage();
-            }
-        }
+    /* ─────────────── UI helpers ─────────────── */
+    function toggleModal(show) {
+        document.getElementById('modal-overlay').classList.toggle('active', show);
+    }
+    function handleOverlayClick(e) {
+        if (e.target === document.getElementById('modal-overlay')) toggleModal(false);
+    }
+    function toggleSidebar(show) {
+        document.getElementById('sidebar').classList.toggle('open', show);
+    }
+    function switchMode(mode) {
+        currentMode = mode;
+        document.getElementById('mode-chat-btn').classList.toggle('active', mode === 'chat');
+        document.getElementById('mode-resp-btn').classList.toggle('active', mode === 'responses');
+        document.getElementById('header-mode-title').textContent =
+            mode === 'chat' ? 'Chế độ Chat thông thường' : 'Chế độ Responses mới';
+        if (mode === 'chat') { previousResponseId = null; document.getElementById('response-id-display').textContent = ''; }
+    }
+    function clearConversation() {
+        chatHistory = []; previousResponseId = null;
+        document.getElementById('response-id-display').textContent = '';
+        document.getElementById('chat-messages').innerHTML = '<div class="message assistant"><div class="meta">System</div><div>Hội thoại đã được xóa.</div></div>';
+    }
+    function autoResize(el) {
+        el.style.height = '24px';
+        el.style.height = Math.min(el.scrollHeight, 160) + 'px';
+    }
+    function handleKeyDown(e) {
+        if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+    }
+    function setStatus(state) {
+        const dot = document.getElementById('status-dot');
+        dot.className = 'status-indicator' + (state === 'error' ? ' error' : state === 'loading' ? ' loading' : '');
+    }
 
-        function handleFileSelect(event) {
-            const files = event.target.files;
-            for (let file of files) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    attachedFiles.push({ name: file.name, type: file.type, dataUrl: e.target.result });
-                    renderAttachments();
-                };
-                reader.readAsDataURL(file);
-            }
-        }
+    /* ─────────────── File attach ─────────────── */
+    function handleFileAttach(input) {
+        [...input.files].forEach(file => {
+            const reader = new FileReader();
+            reader.onload = e => {
+                attachedFiles.push({ name: file.name, type: file.type, dataUrl: e.target.result });
+                renderAttachments();
+            };
+            reader.readAsDataURL(file);
+        });
+        input.value = '';
+    }
+    function renderAttachments() {
+        const bar = document.getElementById('attachment-bar');
+        if (!attachedFiles.length) { bar.style.display = 'none'; bar.innerHTML = ''; return; }
+        bar.style.display = 'flex';
+        bar.innerHTML = attachedFiles.map((f,i) =>
+            `<div class="attachment-item">${f.type.startsWith('image/') ? '🖼' : '📄'} ${escapeHtml(f.name)}
+             <span class="remove-btn" onclick="removeFile(${i})">✕</span></div>`).join('');
+    }
+    function removeFile(i) { attachedFiles.splice(i, 1); renderAttachments(); }
 
-        function renderAttachments() {
-            const bar = document.getElementById('attachment-bar');
-            bar.innerHTML = '';
-            attachedFiles.forEach((file, index) => {
-                const item = document.createElement('div');
-                item.className = 'attachment-item';
-                item.innerHTML = `<span>${file.name}</span><span class="remove-btn" onclick="removeAttachment(${index})">&times;</span>`;
-                bar.appendChild(item);
+    /* ─────────────── Markdown ─────────────── */
+    function escapeHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+    function formatMarkdown(text) {
+        return escapeHtml(text)
+            .replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>')
+            .replace(/`([^`]+)`/g, '<code>$1</code>')
+            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+            .replace(/\*(.*?)\*/g, '<em>$1</em>')
+            .replace(/\n/g, '<br>');
+    }
+
+    /* ─────────────── Send Message ─────────────── */
+    async function sendMessage() {
+        if (isSending) return;
+        const inputEl  = document.getElementById('user-input');
+        const prompt   = inputEl.value.trim();
+        if (!prompt && attachedFiles.length === 0) return;
+
+        const apiKey   = localStorage.getItem('cfg-key');
+        const baseUrl  = (localStorage.getItem('cfg-url')   || PRESETS.freemodel.url).replace(/\/$/, '');
+        const model    = localStorage.getItem('cfg-model')  || PRESETS.freemodel.model;
+
+        if (!apiKey) { alert('⚙️ Vui lòng cấu hình API Key trước.'); toggleModal(true); return; }
+
+        isSending = true;
+        setStatus('loading');
+        document.getElementById('send-btn').disabled = true;
+
+        /* — Render user message — */
+        const msgBox  = document.getElementById('chat-messages');
+        const userDiv = document.createElement('div');
+        userDiv.className = 'message user';
+        let userHtml = `<div>${escapeHtml(prompt)}</div>`;
+        if (attachedFiles.length) {
+            userHtml += `<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;">`;
+            attachedFiles.forEach(f => {
+                if (f.type.startsWith('image/')) userHtml += `<img src="${f.dataUrl}" style="max-width:80px;max-height:80px;border-radius:4px;border:1px solid var(--border-color)"/>`;
+                else userHtml += `<div style="font-size:.8rem;background:rgba(255,255,255,.05);padding:4px 8px;border-radius:4px;border:1px solid var(--border-color)">📄 ${escapeHtml(f.name)}</div>`;
             });
+            userHtml += `</div>`;
         }
+        userDiv.innerHTML = userHtml;
+        msgBox.appendChild(userDiv);
+        inputEl.value = ''; autoResize(inputEl);
 
-        function removeAttachment(index) { attachedFiles.splice(index, 1); renderAttachments(); }
+        /* — Render assistant placeholder — */
+        const assistantDiv = document.createElement('div');
+        assistantDiv.className = 'message assistant';
+        assistantDiv.innerHTML = `<div class="meta">${currentMode === 'chat' ? 'Assistant' : 'Responses API'}</div><div class="content-text" style="color:var(--text-muted)">Đang trả lời...</div>`;
+        msgBox.appendChild(assistantDiv);
+        msgBox.scrollTop = msgBox.scrollHeight;
 
-        function clearHistory() {
-            chatHistory = []; previousResponseId = null; attachedFiles = [];
-            document.getElementById('chat-messages').innerHTML = '';
-            document.getElementById('attachment-bar').innerHTML = '';
-            if (currentMode === 'responses') document.getElementById('response-id-display').innerText = "";
-            appendSystemMessage(`Đã làm mới không gian chat [${currentMode.toUpperCase()}]`);
-        }
+        const contentEl = assistantDiv.querySelector('.content-text');
+        const currentFiles = [...attachedFiles];
+        attachedFiles = []; renderAttachments();
 
-        function appendSystemMessage(text) {
-            const msgBox = document.getElementById('chat-messages');
-            const div = document.createElement('div');
-            div.className = 'message assistant';
-            div.style.borderColor = 'dashed var(--border-color)';
-            div.innerHTML = `<div class="meta">Hệ thống</div><div>${text}</div>`;
-            msgBox.appendChild(div);
-            msgBox.scrollTop = msgBox.scrollHeight;
-        }
-
-                function formatMarkdown(text) {
-            let formatted = text.replace(/```([\s\S]*?)```/g, function(match, p1) {
-                return `<pre><code>${escapeHtml(p1.trim())}</code></pre>`;
+        try {
+            let endpoint, payload;
+            let formattedInput = [];
+            if (prompt) formattedInput.push({ type: 'text', text: prompt });
+            currentFiles.forEach(f => {
+                if (f.type.startsWith('image/')) formattedInput.push({ type: 'image_url', image_url: { url: f.dataUrl } });
+                else formattedInput.push({ type: 'text', text: `[Tệp: ${f.name}]\n${f.dataUrl}` });
             });
-            return formatted.split('\n').join('<br>');
-        }
 
-        function escapeHtml(string) {
-            return String(string).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-        }
-
-        async function sendMessage() {
-            const inputEl = document.getElementById('user-input');
-            const prompt = inputEl.value.trim();
-            if (!prompt && attachedFiles.length === 0) return;
-
-            const apiKey = localStorage.getItem('cfg-key');
-            const baseUrl = localStorage.getItem('cfg-url') || "https://api.freemodel.dev";
-            const modelName = localStorage.getItem('cfg-model') || "claude-3-5-sonnet";
-
-            if (!apiKey) { alert("Vui lòng cấu hình API Key trước."); toggleModal(true); return; }
-
-            const msgBox = document.getElementById('chat-messages');
-            const userDiv = document.createElement('div');
-            userDiv.className = 'message user';
-            
-            let userContentHtml = `<div>${escapeHtml(prompt)}</div>`;
-            if (attachedFiles.length > 0) {
-                userContentHtml += `<div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:8px;">`;
-                attachedFiles.forEach(f => {
-                    if (f.type.startsWith('image/')) userContentHtml += `<img src="${f.dataUrl}" style="max-width:80px; max-height:80px; border-radius:4px; border:1px solid var(--border-color)"/>`;
-                    else userContentHtml += `<div style="font-size:0.8rem; background:rgba(255,255,255,0.05); padding:4px 8px; border-radius:4px; border:1px solid var(--border-color)">📄 ${f.name}</div>`;
-                });
-                userContentHtml += `</div>`;
+            if (currentMode === 'chat') {
+                endpoint = buildEndpoint(baseUrl, '/v1/chat/completions');
+                const finalContent = (formattedInput.length === 1 && formattedInput[0].type === 'text')
+                    ? formattedInput[0].text : formattedInput;
+                chatHistory.push({ role: 'user', content: finalContent });
+                payload = { model, messages: chatHistory, stream: true };
+            } else {
+                endpoint = buildEndpoint(baseUrl, '/v1/responses');
+                payload = { model, input: formattedInput, stream: true };
+                if (previousResponseId) payload.previous_response_id = previousResponseId;
             }
-            userDiv.innerHTML = userContentHtml;
-            msgBox.appendChild(userDiv);
-            
-            inputEl.value = ''; autoResize(inputEl);
 
-            const assistantDiv = document.createElement('div');
-            assistantDiv.className = 'message assistant';
-            assistantDiv.innerHTML = `<div class="meta">${currentMode === 'chat' ? 'Assistant' : 'Responses API'}</div><div class="content-text">Đang trả lời...</div>`;
-            msgBox.appendChild(assistantDiv);
-            msgBox.scrollTop = msgBox.scrollHeight;
+            const response = await fetch(endpoint, {
+                method: 'POST',
+                headers: { 'Authorization': `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
 
-            const contentTextEl = assistantDiv.querySelector('.content-text');
-            const currentTurnFiles = [...attachedFiles];
-            attachedFiles = []; renderAttachments();
+            if (!response.ok) {
+                const errText = await response.text().catch(() => '');
+                throw Object.assign(new Error(`HTTP ${response.status}`), { httpStatus: response.status, body: errText });
+            }
 
-            try {
-                let endpoint = "", payload = {};
+            const reader  = response.body.getReader();
+            const decoder = new TextDecoder('utf-8');
+            let responseText = '';
+            contentEl.style.color = '';
+            contentEl.innerHTML = '';
 
-                // Gom chung cấu trúc dữ liệu đầu vào bao gồm Text và File
-                let formattedInput = [];
-                if (prompt) formattedInput.push({ type: "text", text: prompt });
-                
-                currentTurnFiles.forEach(file => {
-                    if (file.type.startsWith('image/')) {
-                        formattedInput.push({ type: "image_url", image_url: { url: file.dataUrl } });
-                    } else {
-                        formattedInput.push({ type: "text", text: `[Tệp: ${file.name}]\n${file.dataUrl}` });
-                    }
-                });
-
-                if (currentMode === 'chat') {
-                    endpoint = `${baseUrl}/v1/chat/completions`;
-                    
-                    // Nếu không có tệp đính kèm, sử dụng chuỗi văn bản thường cho lịch sử tối ưu.
-                    // Nếu có tệp, sử dụng cấu trúc mảng hỗn hợp (Object Array) chuẩn OpenAI.
-                    const finalContent = (formattedInput.length === 1 && formattedInput[0].type === "text") 
-                        ? formattedInput[0].text 
-                        : formattedInput;
-
-                    chatHistory.push({ role: "user", content: finalContent });
-                    payload = { model: modelName, messages: chatHistory, stream: true };
-                } else {
-                    endpoint = `${baseUrl}/v1/responses`;
-                    payload = { model: modelName, input: formattedInput, stream: true };
-                    if (previousResponseId) payload.previous_response_id = previousResponseId;
-                }
-
-                const response = await fetch(endpoint, {
-                    method: 'POST',
-                    headers: { 'Authorization': `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-
-                if (!response.ok) throw new Error(`HTTP Error ${response.status}`);
-
-                const reader = response.body.getReader();
-                const decoder = new TextDecoder("utf-8");
-                let responseText = "";
-                contentTextEl.innerHTML = "";
-
-                while (true) {
-                    const { value, done } = await reader.read();
-                    if (done) break;
-
-                    const chunk = decoder.decode(value, { stream: true });
-                    const lines = chunk.split('\n');
-                    
-                    for (let line of lines) {
-                        let cleanLine = line.trim();
-                        if (!cleanLine || cleanLine === 'data: [DONE]') continue;
-                        if (cleanLine.startsWith('data: ')) {
-                            try {
-                                const parsed = JSON.parse(cleanLine.slice(6));
-                                if (currentMode === 'chat') {
-                                    responseText += parsed.choices?.[0]?.delta?.content || "";
-                                } else {
-                                    if (parsed.id && !previousResponseId) {
-                                        previousResponseId = parsed.id;
-                                        document.getElementById('response-id-display').innerText = `ID: ${previousResponseId}`;
-                                    }
-                                    responseText += parsed.delta?.content || parsed.output?.text || parsed.choices?.[0]?.delta?.content || "";
+            while (true) {
+                const { value, done } = await reader.read();
+                if (done) break;
+                const chunk = decoder.decode(value, { stream: true });
+                for (let line of chunk.split('\n')) {
+                    const clean = line.trim();
+                    if (!clean || clean === 'data: [DONE]') continue;
+                    if (clean.startsWith('data: ')) {
+                        try {
+                            const parsed = JSON.parse(clean.slice(6));
+                            if (currentMode === 'chat') {
+                                responseText += parsed.choices?.[0]?.delta?.content || '';
+                            } else {
+                                if (parsed.id && !previousResponseId) {
+                                    previousResponseId = parsed.id;
+                                    document.getElementById('response-id-display').textContent = `ID: ${previousResponseId}`;
                                 }
-                                contentTextEl.innerHTML = formatMarkdown(responseText);
-                                msgBox.scrollTop = msgBox.scrollHeight;
-                            } catch (e) {}
-                        }
+                                responseText += parsed.delta?.content || parsed.output?.text || parsed.choices?.[0]?.delta?.content || '';
+                            }
+                            contentEl.innerHTML = formatMarkdown(responseText);
+                            msgBox.scrollTop = msgBox.scrollHeight;
+                        } catch {}
                     }
                 }
-                if (currentMode === 'chat') chatHistory.push({ role: "assistant", content: responseText });
-            } catch (error) {
-                contentTextEl.style.color = '#ef4444';
-                contentTextEl.innerText = `Lỗi: ${error.message}`;
             }
+            if (currentMode === 'chat') chatHistory.push({ role: 'assistant', content: responseText });
+            setStatus('ok');
+
+        } catch (err) {
+            setStatus('error');
+            const isCORS = err.name === 'TypeError' && (err.message.includes('Failed to fetch') || err.message.includes('NetworkError') || err.message.includes('Load failed'));
+            const isAuth = err.httpStatus === 401 || err.httpStatus === 403;
+            const isModel = err.httpStatus === 404 || err.httpStatus === 422;
+
+            let html = `<span style="color:var(--accent-red)">⚠️ Lỗi: ${escapeHtml(err.message)}</span>`;
+            let hint = '';
+
+            if (isCORS) {
+                hint = `<strong>🚫 CORS Error</strong> — Trình duyệt bị chặn gọi API này trực tiếp từ GitHub Pages.<br>
+                    <strong>Cách fix:</strong><br>
+                    1️⃣ Vào <a onclick="toggleModal(true)">⚙️ Cài đặt</a> → bật <em>CORS Proxy</em><br>
+                    2️⃣ Hoặc đổi sang Groq / OpenRouter / Gemini (hỗ trợ CORS)`;
+            } else if (isAuth) {
+                hint = `<strong>🔑 Sai API Key hoặc hết hạn</strong><br>Vào <a onclick="toggleModal(true)">⚙️ Cài đặt</a> để kiểm tra lại API Key.`;
+            } else if (isModel) {
+                hint = `<strong>🤖 Model không tồn tại</strong>: <code>${localStorage.getItem('cfg-model')}</code><br>
+                    Vào <a onclick="toggleModal(true)">⚙️ Cài đặt</a> → chọn preset để lấy tên model đúng.`;
+            } else if (err.body) {
+                hint = `<strong>Chi tiết:</strong> ${escapeHtml(err.body.slice(0, 200))}`;
+            }
+
+            contentEl.innerHTML = html + (hint ? `<div class="error-hint">${hint}</div>` : '');
+            if (currentMode === 'chat' && chatHistory.at(-1)?.role === 'user') chatHistory.pop();
+        } finally {
+            isSending = false;
+            document.getElementById('send-btn').disabled = false;
         }
-    </script>
+    }
+</script>
 </body>
 </html>
